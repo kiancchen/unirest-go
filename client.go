@@ -221,6 +221,7 @@ func (c *HTTPClient) AsBytes() ([]byte, error) {
 	}
 
 	buf, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
 	if err != nil {
 		return nil, err
 	}

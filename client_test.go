@@ -206,7 +206,7 @@ func TestClone(t *testing.T) {
 	assert.Equal(t, "", c.basicAuth[0])
 	assert.Equal(t, "", c.basicAuth[1])
 	assert.Equal(t, "1", c6.basicAuth[0])
-	assert.Equal(t, "2", c6.basicAuth[0])
+	assert.Equal(t, "2", c6.basicAuth[1])
 
 	c7 := c.AddFile("1", "2", []byte("3"))
 	assert.Equal(t, 0, len(c.files))

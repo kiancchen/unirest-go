@@ -122,18 +122,19 @@ func (c *HTTPClient) Post() *HTTPClient {
 	return clone
 }
 
-func (c *HTTPClient) Send() (*http.Response, error) {
+func (c *HTTPClient) Send() *Response {
 	req, err := c.ParseRequest()
 	if err != nil {
-		return nil, err
+		return &Response{Err: err}
 	}
 
 	var httpclient http.Client
 	resp, err := httpclient.Do(req)
 	if err != nil {
-		return nil, err
+		return &Response{Err: err}
 	}
-	return resp, nil
+
+	return &Response{Response: resp}
 }
 
 func (c *HTTPClient) ParseRequest() (*http.Request, error) {
@@ -212,30 +213,6 @@ func (c *HTTPClient) ParseRequest() (*http.Request, error) {
 		}
 	}
 	return req, nil
-}
-
-func (c *HTTPClient) AsBytes() ([]byte, error) {
-	resp, err := c.Send()
-	if err != nil {
-		return nil, err
-	}
-
-	buf, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	return buf, nil
-}
-
-func (c *HTTPClient) AsString() (string, error) {
-	buf, err := c.AsBytes()
-	if err != nil {
-		return "", err
-	}
-
-	return b2s(buf), nil
 }
 
 // b2s converts byte slice to a string without memory allocation.

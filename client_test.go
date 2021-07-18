@@ -24,7 +24,7 @@ func TestSimpleQuery(t *testing.T) {
 		}
 	}))
 	defer svr.Close()
-	c, err := New(svr.URL).AddQuery("field1", "1").AsString()
+	c, err := New(svr.URL).AddQuery("field1", "1").Send().AsString()
 	assert.NoError(t, err)
 	assert.Equal(t, "true", c)
 }
@@ -53,6 +53,7 @@ func TestMultiQuery(t *testing.T) {
 		AddQuery("field1", "1").
 		AddQuery("field1", "2").
 		AddQuery("field2", "1").
+		Send().
 		AsString()
 
 	assert.NoError(t, err)
@@ -81,6 +82,7 @@ func TestSimpleForm(t *testing.T) {
 		AddFormField("field1", "1").
 		AddFormField("field1", "2").
 		AddFormField("field2", "1").
+		Send().
 		AsString()
 
 	assert.NoError(t, err)
@@ -122,6 +124,7 @@ func TestSimpleFile(t *testing.T) {
 		AddFile("file1", "file1.txt", []byte("file1")).
 		AddFile("file1", "file11.txt", []byte("file11")).
 		AddFile("file2", "file2.txt", []byte("file2")).
+		Send().
 		AsString()
 
 	assert.NoError(t, err)
@@ -141,7 +144,7 @@ func TestSimpleBody(t *testing.T) {
 		}
 	}))
 	defer svr.Close()
-	c, err := New(svr.URL).SetRawBody([]byte("raw body")).AsString()
+	c, err := New(svr.URL).SetRawBody([]byte("raw body")).Send().AsString()
 	assert.NoError(t, err)
 	assert.Equal(t, "true", c)
 }
@@ -160,7 +163,7 @@ func TestSimpleJSON(t *testing.T) {
 		}
 	}))
 	defer svr.Close()
-	c, err := New(svr.URL).SetJSONBody([]byte("{\"A\":1}")).AsString()
+	c, err := New(svr.URL).SetJSONBody([]byte("{\"A\":1}")).Send().AsString()
 	assert.NoError(t, err)
 	assert.Equal(t, "true", c)
 }
@@ -179,7 +182,7 @@ func TestBodyAndJSON(t *testing.T) {
 		}
 	}))
 	defer svr.Close()
-	c, err := New(svr.URL).SetJSONBody([]byte("{\"A\":1}")).SetRawBody([]byte("raw body")).AsString()
+	c, err := New(svr.URL).SetJSONBody([]byte("{\"A\":1}")).SetRawBody([]byte("raw body")).Send().AsString()
 	assert.NoError(t, err)
 	assert.Equal(t, "true", c)
 }
@@ -216,6 +219,6 @@ func TestClone(t *testing.T) {
 }
 
 func TestExpectedError(t *testing.T) {
-	_, err := New("a.com").AddFormField("1", "1").SetRawBody([]byte("123")).AsBytes()
+	_, err := New("a.com").AddFormField("1", "1").SetRawBody([]byte("123")).Send().AsBytes()
 	assert.Error(t, err, "unirest-go: can send this request with multiple content type")
 }
